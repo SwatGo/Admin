@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta name="theme-color" content="#7c3aed" />
-<title>SYEDGO Admin</title>
+<title>SwatGo Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root { --primary: #0f172a; --admin: #7c3aed; --accent: #f59e0b; --success: #22c55e; --danger: #ef4444; --info: #3b82f6; --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; --text-light: #64748b; --border: #e2e8f0; }
@@ -75,9 +75,9 @@ p { font-size: 13px; color: var(--text-light); }
 </style>
 </head>
 <body>
-<div id="splash"><h1>SYEDGO</h1><p>Admin Control Panel</p><div class="loader"></div></div>
+<div id="splash"><h1>SwatGo</h1><p>Admin Control Panel</p><div class="loader"></div></div>
 <div class="app">
-  <header class="topbar"><h1>⚙️ SYEDGO Admin</h1><div class="logout" onclick="adminLogout()">Logout</div></header>
+  <header class="topbar"><h1>⚙️ SwatGo Admin</h1><div class="logout" onclick="adminLogout()">Logout</div></header>
   <main id="app"></main>
   <nav class="bottom-nav" id="bottomNav">
     <button data-tab="dashboard" class="active">📊<span class="lbl">Dashboard</span></button>
@@ -114,7 +114,7 @@ p { font-size: 13px; color: var(--text-light); }
   function toast(msg) { const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(window._t); window._t = setTimeout(() => t.classList.remove("show"), 2500); }
   function closeModal() { document.getElementById("modalRoot").innerHTML = ""; }
 
-  function adminLogin() { document.getElementById("modalRoot").innerHTML = `<div class="overlay"><div class="sheet"><h3>🔐 Admin Login</h3><input class="form-input" id="adminPass" type="password" placeholder="Password" onkeypress="if(event.key==='Enter')verifyAdmin()" /><button class="btn btn-primary btn-block" onclick="verifyAdmin()">Login</button><p style="font-size:11px;color:var(--text-light);text-align:center;margin-top:10px;">Default: admin123</p></div></div>`; setTimeout(() => document.getElementById('adminPass')?.focus(), 100); }
+  function adminLogin() { document.getElementById("modalRoot").innerHTML = `<div class="overlay"><div class="sheet"><h3>🔐 Admin Login</h3><input class="form-input" id="adminPass" type="password" placeholder="Password" onkeypress="if(event.key==='Enter')verifyAdmin()" /><button class="btn btn-primary btn-block" onclick="verifyAdmin()">Login</button></div></div>`; setTimeout(() => document.getElementById('adminPass')?.focus(), 100); }
 
   function verifyAdmin() { const pass = document.getElementById('adminPass').value; if (pass === ADMIN_PASSWORD) { state.isLoggedIn = true; localStorage.setItem("syedgo_admin_logged", "true"); closeModal(); startListeners(); render(); toast("Welcome, Admin! 🎉"); } else toast("❌ Wrong password"); }
 
@@ -150,7 +150,7 @@ p { font-size: 13px; color: var(--text-light); }
     const gmv = delivered.reduce((sum, o) => sum + (o.total || 0), 0);
     return `<h2>📊 Dashboard</h2>
       <div class="stat-grid">
-        <div class="stat-box accent"><div class="num">Rs ${totalRevenue}</div><div class="lbl">Total SYEDGO Revenue</div></div>
+        <div class="stat-box accent"><div class="num">Rs ${totalRevenue}</div><div class="lbl">Total SwatGo Revenue</div></div>
         <div class="stat-box green"><div class="num">Rs ${todayRevenue}</div><div class="lbl">Today's Revenue</div></div>
         <div class="stat-box blue"><div class="num">Rs ${gmv}</div><div class="lbl">GMV</div></div>
         <div class="stat-box"><div class="num">${state.orders.length}</div><div class="lbl">Total Orders</div></div>
@@ -194,7 +194,7 @@ p { font-size: 13px; color: var(--text-light); }
       <div class="card"><h3 style="font-size:13px;margin-bottom:8px;">🛍️ Items</h3>${(o.items || []).map(i => `<div class="order-row"><span>${i.name} × ${i.qty}</span><span>Rs ${i.price * i.qty}</span></div>`).join("")}</div>
       ${o.rider ? `<div class="card" style="background:#f0fdf4;"><h3 style="font-size:13px;margin-bottom:8px;">🛵 Rider</h3><div class="order-row"><span>Name</span><span>${o.rider.name || '-'}</span></div><div class="order-row"><span>Phone</span><span>${o.rider.phone || '-'}</span></div><div class="order-row"><span>Bike</span><span>${o.rider.bike || '-'}</span></div><div class="order-row"><span>Earning</span><span>Rs ${o.riderEarning || 120}</span></div></div>` : ''}
       <div class="card"><h3 style="font-size:13px;margin-bottom:8px;">💰 Financials</h3><div class="order-row"><span>Products</span><span>Rs ${o.subtotal || 0}</span></div><div class="order-row"><span>Delivery</span><span>Rs ${o.delivery || 0}</span></div><div class="order-row"><span>Platform Fee</span><span>Rs ${platformFee}</span></div>${o.discount > 0 ? `<div class="order-row" style="color:var(--success);"><span>Discount</span><span>-Rs ${o.discount}</span></div>` : ''}<div class="order-row" style="border-top:1px solid var(--border);padding-top:6px;margin-top:6px;"><span><b>Customer Paid</b></span><span><b>Rs ${o.total}</b></span></div></div>
-      <div class="card" style="background:#f5f3ff;"><h3 style="font-size:13px;margin-bottom:8px;color:var(--admin);">📊 SYEDGO Revenue</h3><div class="order-row"><span>Store Commission (${state.settings.commissionRate}%)</span><span>Rs ${commission}</span></div><div class="order-row"><span>Platform Fee</span><span>Rs ${platformFee}</span></div><div class="order-row"><span>Delivery Margin</span><span>Rs ${deliveryMargin}</span></div><div class="order-row" style="border-top:1px solid var(--border);padding-top:6px;margin-top:6px;"><span><b>Total</b></span><span><b style="color:var(--admin);">Rs ${totalRevenue}</b></span></div></div>
+      <div class="card" style="background:#f5f3ff;"><h3 style="font-size:13px;margin-bottom:8px;color:var(--admin);">📊 SwatGo Revenue</h3><div class="order-row"><span>Store Commission (${state.settings.commissionRate}%)</span><span>Rs ${commission}</span></div><div class="order-row"><span>Platform Fee</span><span>Rs ${platformFee}</span></div><div class="order-row"><span>Delivery Margin</span><span>Rs ${deliveryMargin}</span></div><div class="order-row" style="border-top:1px solid var(--border);padding-top:6px;margin-top:6px;"><span><b>Total</b></span><span><b style="color:var(--admin);">Rs ${totalRevenue}</b></span></div></div>
       <div class="card"><h3 style="font-size:13px;margin-bottom:8px;">💳 Payment</h3><div class="order-row"><span>Method</span><span>${(o.pay || 'cod').toUpperCase()}</span></div><div class="order-row"><span>Mode</span><span>${o.mode === 'delivery' ? 'Delivery' : 'Pickup'}</span></div></div>
       <button class="btn btn-outline btn-block" onclick="closeModal()" style="margin-top:12px;">Close</button></div></div>`;
   }
@@ -208,7 +208,7 @@ p { font-size: 13px; color: var(--text-light); }
         const products = m.products || [];
         const totalOrders = state.orders.filter(o => (o.items || []).some(i => i.shopName === mm.storeName)).length;
         const isFeatured = (state.settings.featuredMerchants || []).includes(mm.phone);
-        return `<div class="card"><div class="list-header"><b>${mm.storeName}</b>${isFeatured ? '<span class="status-chip" style="background:#fef3c7;color:#92400e;">⭐ Featured</span>' : ''}</div><div class="order-row"><span>Category</span><span>${mm.category}</span></div><div class="order-row"><span>Phone</span><span>${mm.phone}</span></div><div class="order-row"><span>Address</span><span style="font-size:11px;text-align:right;max-width:60%;">${mm.address || '-'}</span></div><div class="order-row"><span>Products</span><span>${products.length}</span></div><div class="order-row"><span>Total Orders</span><span>${totalOrders}</span></div><div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;"><button class="btn ${isFeatured ? 'btn-warning' : 'btn-outline'} btn-sm" onclick="toggleFeatured('${mm.phone}')">${isFeatured ? '⭐ Remove' : '⭐ Feature'}</button><button class="btn btn-outline btn-sm" onclick="viewMerchantProducts('${mm.phone}')">📦 Products</button><button class="btn btn-danger btn-sm" onclick="deleteMerchant('${mm.phone}')">🗑️ Delete</button></div></div>`;
+        return `<div class="card"><div class="list-header"><b>${mm.storeName}</b>${isFeatured ? '<span class="status-chip" style="background:#fef3c7;color:#92400e;">⭐ Featured</span>' : ''}</div><div class="order-row"><span>Category</span><span>${mm.category}</span></div><div class="order-row"><span>Phone</span><span>${mm.phone}</span></div><div class="order-row"><span>Email</span><span style="font-size:11px;">${mm.email || '-'}</span></div><div class="order-row"><span>Address</span><span style="font-size:11px;text-align:right;max-width:60%;">${mm.address || '-'}</span></div><div class="order-row"><span>Products</span><span>${products.length}</span></div><div class="order-row"><span>Total Orders</span><span>${totalOrders}</span></div><div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;"><button class="btn ${isFeatured ? 'btn-warning' : 'btn-outline'} btn-sm" onclick="toggleFeatured('${mm.phone}')">${isFeatured ? '⭐ Remove' : '⭐ Feature'}</button><button class="btn btn-outline btn-sm" onclick="viewMerchantProducts('${mm.phone}')">📦 Products</button><button class="btn btn-danger btn-sm" onclick="deleteMerchant('${mm.phone}')">🗑️ Delete</button></div></div>`;
       }).join("")}`;
   }
 
@@ -279,11 +279,11 @@ p { font-size: 13px; color: var(--text-light); }
 
   async function updateSetting(key, value) { if (isNaN(value)) return toast("Invalid"); state.settings[key] = value; try { await setDoc(doc(db, "settings", "global"), state.settings, { merge: true }); toast("Saved ✅"); } catch (e) { toast("Failed"); } }
 
-  function exportData() { const data = JSON.stringify({ orders: state.orders, merchants: state.merchants, riders: state.riders, customers: state.customers, payouts: state.payouts, exportedAt: new Date().toISOString() }, null, 2); const blob = new Blob([data], { type: "application/json" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "syedgo-export-" + Date.now() + ".json"; a.click(); toast("Exported"); }
+  function exportData() { const data = JSON.stringify({ orders: state.orders, merchants: state.merchants, riders: state.riders, customers: state.customers, payouts: state.payouts, exportedAt: new Date().toISOString() }, null, 2); const blob = new Blob([data], { type: "application/json" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "swatgo-export-" + Date.now() + ".json"; a.click(); toast("Exported"); }
 
   function render() {
     const app = document.getElementById("app");
-    if (!state.isLoggedIn) { app.innerHTML = `<div class="card" style="text-align:center;padding:40px 20px;"><div style="font-size:64px;margin-bottom:16px;">⚙️</div><h3 style="margin-bottom:8px;">SYEDGO Admin Panel</h3><p style="color:var(--text-light);font-size:13px;margin-bottom:20px;">Secure access only</p><button class="btn btn-primary btn-block" onclick="adminLogin()">🔐 Login</button></div>`; document.getElementById("bottomNav").style.display = "none"; return; }
+    if (!state.isLoggedIn) { app.innerHTML = `<div class="card" style="text-align:center;padding:40px 20px;"><div style="font-size:64px;margin-bottom:16px;">⚙️</div><h3 style="margin-bottom:8px;">SwatGo Admin Panel</h3><p style="color:var(--text-light);font-size:13px;margin-bottom:20px;">Secure access only</p><button class="btn btn-primary btn-block" onclick="adminLogin()">🔐 Login</button></div>`; document.getElementById("bottomNav").style.display = "none"; return; }
     document.getElementById("bottomNav").style.display = "flex";
     let html = "";
     if (state.tab === "dashboard") html = renderDashboard();

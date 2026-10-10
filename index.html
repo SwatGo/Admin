@@ -6,10 +6,12 @@
 <meta name="theme-color" content="#7c3aed" />
 <title>SwatGo Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-:root { --primary: #0f172a; --admin: #7c3aed; --accent: #f59e0b; --success: #22c55e; --danger: #ef4444; --info: #3b82f6; --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; --text-light: #64748b; --border: #e2e8f0; }
+:root { --primary: #0f172a; --admin: #7c3aed; --accent: #f59e0b; --success: #22c55e; --danger: #ef4444; --info: #3b82f6; --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; --text-light: #64748b; --border: #e2e8f0; --input-bg: #ffffff; --nav-bg: #ffffff; }
+body.dark { --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --text-light: #94a3b8; --border: #334155; --input-bg: #1e293b; --nav-bg: #1e293b; --primary: #f1f5f9; }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-body { background: var(--bg); display: flex; justify-content: center; min-height: 100vh; }
+body { background: var(--bg); display: flex; justify-content: center; min-height: 100vh; color: var(--text); transition: background 0.3s; }
 .app { width: 100%; max-width: 480px; background: var(--bg); min-height: 100vh; position: relative; padding-bottom: 75px; overflow-x: hidden; }
 #splash { position: fixed; inset: 0; background: var(--admin); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.5s; }
 #splash h1 { font-size: 34px; letter-spacing: 3px; margin-bottom: 10px; }
@@ -22,23 +24,23 @@ main { padding: 16px; }
 h2 { font-size: 18px; margin-bottom: 12px; color: var(--text); font-weight: 600; }
 h3 { font-size: 15px; color: var(--text); }
 p { font-size: 13px; color: var(--text-light); }
-.card { background: var(--card); border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.02); }
-.bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; display: flex; justify-content: space-around; background: #fff; border-top: 1px solid var(--border); padding: 10px 0; z-index: 100; overflow-x: auto; }
-.bottom-nav button { background: none; border: none; display: flex; flex-direction: column; align-items: center; font-size: 18px; color: #94a3b8; cursor: pointer; position: relative; flex: 1; padding: 4px; min-width: 60px; }
+.card { background: var(--card); border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border); }
+.bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; display: flex; justify-content: space-around; background: var(--nav-bg); border-top: 1px solid var(--border); padding: 10px 0; z-index: 100; overflow-x: auto; }
+.bottom-nav button { background: none; border: none; display: flex; flex-direction: column; align-items: center; font-size: 18px; color: #94a3b8; cursor: pointer; position: relative; flex: 1; padding: 4px; min-width: 55px; }
 .bottom-nav button span.lbl { font-size: 9px; margin-top: 3px; font-weight: 500; }
 .bottom-nav button.active { color: var(--admin); font-weight: 700; }
-.badge { position: absolute; top: -2px; right: 22%; background: var(--danger); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: bold; border: 2px solid #fff; }
+.badge { position: absolute; top: -2px; right: 22%; background: var(--danger); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: bold; border: 2px solid var(--card); }
 .hidden { display: none !important; }
 .btn { border: none; border-radius: 10px; padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer; }
 .btn-primary { background: var(--admin); color: #fff; }
 .btn-success { background: var(--success); color: #fff; }
 .btn-danger { background: var(--danger); color: #fff; }
 .btn-warning { background: var(--accent); color: #fff; }
-.btn-outline { background: #f1f5f9; color: var(--text); border: 1px solid var(--border); }
+.btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
 .btn-block { width: 100%; }
 .btn-sm { padding: 6px 12px; font-size: 11px; border-radius: 8px; }
 .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-.stat-box { background: #fff; padding: 16px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.02); }
+.stat-box { background: var(--card); padding: 16px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border); }
 .stat-box .num { font-size: 22px; font-weight: 700; color: var(--text); }
 .stat-box .lbl { font-size: 11px; color: var(--text-light); text-transform: uppercase; margin-top: 4px; font-weight: 500; }
 .stat-box.accent { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: #fff; grid-column: span 2; }
@@ -49,9 +51,9 @@ p { font-size: 13px; color: var(--text-light); }
 .stat-box.blue .num { color: var(--info); }
 .stat-box.amber .num { color: var(--accent); }
 .filter-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 8px; scrollbar-width: none; }
-.filter-chip { flex-shrink: 0; background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 12px; cursor: pointer; color: var(--text-light); }
+.filter-chip { flex-shrink: 0; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 12px; cursor: pointer; color: var(--text-light); }
 .filter-chip.active { background: var(--admin); color: #fff; border-color: var(--admin); }
-.search-input { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; margin-bottom: 14px; outline: none; background: #fff; }
+.search-input { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; margin-bottom: 14px; outline: none; background: var(--input-bg); color: var(--text); }
 .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 .order-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; }
 .order-row span:first-child { color: var(--text-light); }
@@ -64,20 +66,28 @@ p { font-size: 13px; color: var(--text-light); }
 .status-chip.delivered { background: #dcfce7; color: #166534; }
 .status-chip.cancelled { background: #f3f4f6; color: #6b7280; }
 .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; }
-.sheet { background: #fff; width: 100%; max-width: 480px; border-radius: 24px 24px 0 0; padding: 24px; max-height: 92vh; overflow-y: auto; }
+.sheet { background: var(--card); width: 100%; max-width: 480px; border-radius: 24px 24px 0 0; padding: 24px; max-height: 92vh; overflow-y: auto; color: var(--text); }
 .sheet h3 { margin-bottom: 16px; font-size: 20px; }
-.form-input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; font-size: 14px; outline: none; }
+.form-input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; font-size: 14px; outline: none; background: var(--input-bg); color: var(--text); }
 .form-label { font-size: 12px; color: var(--text-light); margin-bottom: 6px; display: block; font-weight: 500; }
 .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: var(--primary); color: #fff; padding: 12px 24px; border-radius: 30px; font-size: 13px; z-index: 9999; opacity: 0; transition: opacity 0.3s, transform 0.3s; pointer-events: none; max-width: 90%; text-align: center; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(-10px); }
 .empty { text-align: center; color: var(--text-light); padding: 60px 0; font-size: 14px; }
 .empty .big { font-size: 56px; display: block; margin-bottom: 16px; }
+.chart-container { background: var(--card); border-radius: 16px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); }
+.chart-container canvas { max-height: 220px; }
+.dark-toggle { position: fixed; top: 65px; right: 16px; z-index: 50; width: 40px; height: 40px; border-radius: 50%; background: var(--admin); color: #fff; border: none; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(124,58,237,0.3); }
+.rating-badge { display: inline-flex; align-items: center; gap: 4px; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+.report-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.report-row:last-child { border-bottom: none; }
+.export-btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 </style>
 </head>
 <body>
 <div id="splash"><h1>SwatGo</h1><p>Admin Control Panel</p><div class="loader"></div></div>
 <div class="app">
   <header class="topbar"><h1>⚙️ SwatGo Admin</h1><div class="logout" onclick="adminLogout()">Logout</div></header>
+  <button class="dark-toggle" onclick="toggleDarkMode()" id="darkToggle">🌙</button>
   <main id="app"></main>
   <nav class="bottom-nav" id="bottomNav">
     <button data-tab="dashboard" class="active">📊<span class="lbl">Dashboard</span></button>
@@ -86,6 +96,7 @@ p { font-size: 13px; color: var(--text-light); }
     <button data-tab="riders">🛵<span class="lbl">Riders</span></button>
     <button data-tab="customers">👥<span class="lbl">Users</span></button>
     <button data-tab="payouts">💸<span class="lbl">Payouts</span></button>
+    <button data-tab="reports">📈<span class="lbl">Reports</span></button>
     <button data-tab="settings">⚙️<span class="lbl">Settings</span></button>
   </nav>
 </div>
@@ -108,9 +119,16 @@ p { font-size: 13px; color: var(--text-light); }
     orders: [], merchants: [], riders: [], customers: [], payouts: [],
     orderFilter: "all", searchQuery: "",
     settings: { commissionRate: 10, deliveryFee: 150, platformFee: 30, riderCut: 120, featuredMerchants: [] },
-    listeners: {}
+    listeners: {},
+    darkMode: localStorage.getItem("syedgo_admin_dark") === "true",
+    reportRange: "7days"
   };
 
+  let salesChartInstance = null, ordersChartInstance = null;
+
+  // ============================================
+  // EXISTING FUNCTIONS (UNCHANGED)
+  // ============================================
   function toast(msg) { const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(window._t); window._t = setTimeout(() => t.classList.remove("show"), 2500); }
   function closeModal() { document.getElementById("modalRoot").innerHTML = ""; }
 
@@ -122,9 +140,9 @@ p { font-size: 13px; color: var(--text-light); }
 
   function startListeners() {
     if (!state.isLoggedIn) return;
-    if (!state.listeners.orders) state.listeners.orders = onSnapshot(collection(db, "orders"), (snap) => { const arr = []; snap.forEach(d => arr.push({ id: d.id, ...d.data() })); arr.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); state.orders = arr; updateOrderBadge(); if (["dashboard", "orders"].includes(state.tab)) render(); });
-    if (!state.listeners.merchants) state.listeners.merchants = onSnapshot(collection(db, "merchants"), (snap) => { const arr = []; snap.forEach(d => arr.push({ id: d.id, ...d.data() })); state.merchants = arr; if (state.tab === "merchants" || state.tab === "dashboard") render(); });
-    if (!state.listeners.riders) state.listeners.riders = onSnapshot(collection(db, "riders"), (snap) => { const arr = []; snap.forEach(d => arr.push({ id: d.id, ...d.data() })); state.riders = arr; if (state.tab === "riders" || state.tab === "dashboard") render(); });
+    if (!state.listeners.orders) state.listeners.orders = onSnapshot(collection(db, "orders"), (snap) => { const arr = []; snap.forEach(d => arr.push({ id: d.id, ...d.data() })); arr.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); state.orders = arr; updateOrderBadge(); if (["dashboard", "orders", "reports"].includes(state.tab)) render(); });
+    if (!state.listeners.merchants) state.listeners.merchants = onSnapshot(collection(db, "merchants"), (snap) => { const arr = []; snap.forEach(d => arr.push({ id: d.id, ...d.data() })); state.merchants = arr; if (state.tab === "merchants" || state.tab === "dashboard" || state.tab === "reports") render(); });
+    if (!state.listeners.riders) state.listeners.riders = onSnapshot(collection(db, "riders"), (snap) => { const arr = []; snap.forEach(d => arr.push({ id: d.id, ...d.data() })); state.riders = arr; if (state.tab === "riders" || state.tab === "dashboard" || state.tab === "reports") render(); });
     if (!state.listeners.customers) state.listeners.customers = onSnapshot(collection(db, "users"), (snap) => { const arr = []; snap.forEach(d => arr.push({ id: d.id, ...d.data() })); state.customers = arr; if (state.tab === "customers" || state.tab === "dashboard") render(); });
     if (!state.listeners.payouts) state.listeners.payouts = onSnapshot(collection(db, "payouts"), (snap) => { const arr = []; snap.forEach(d => arr.push({ id: d.id, ...d.data() })); arr.sort((a, b) => new Date(b.requestedAt) - new Date(a.requestedAt)); state.payouts = arr; if (state.tab === "payouts" || state.tab === "dashboard") render(); });
     if (!state.listeners.settings) state.listeners.settings = onSnapshot(doc(db, "settings", "global"), (snap) => {
@@ -137,6 +155,65 @@ p { font-size: 13px; color: var(--text-light); }
 
   function getStatusClass(status) { if (status === "Placed") return "pending"; if (status === "Accepted by Store") return "accepted"; if (status === "Ready for Pickup") return "ready"; if (["Rider Assigned", "Picked Up", "On the Way"].includes(status)) return "assigned"; if (status === "Delivered") return "delivered"; if (["Cancelled", "Rejected"].includes(status)) return "cancelled"; return ""; }
 
+  // ============================================
+  // NEW: HELPER FUNCTIONS FOR RATINGS
+  // ============================================
+  function calcMerchantRating(merchantDoc) {
+    const mm = merchantDoc.merchant || merchantDoc;
+    const storeName = mm.storeName || "";
+    const myOrders = state.orders.filter(o => (o.items || []).some(i => i.shopName && i.shopName.toLowerCase() === storeName.toLowerCase()));
+    const delivered = myOrders.filter(o => o.status === "Delivered");
+    if (delivered.length === 0) return { rating: "New", count: 0, score: 0, deliveredCount: 0, totalOrders: myOrders.length };
+    const avgCommission = 1; // placeholder
+    // Score based on delivery rate + volume
+    const deliveryRate = delivered.length / myOrders.length;
+    const volumeScore = Math.min(delivered.length / 50, 1);
+    const score = (deliveryRate * 0.6 + volumeScore * 0.4) * 5;
+    return { rating: score.toFixed(1), count: delivered.length, score: score, deliveredCount: delivered.length, totalOrders: myOrders.length, deliveryRate: (deliveryRate * 100).toFixed(0) };
+  }
+
+  function calcRiderRating(rider) {
+    const myOrders = state.orders.filter(o => o.rider && o.rider.phone === rider.phone);
+    const delivered = myOrders.filter(o => o.status === "Delivered");
+    const cancelledByRider = myOrders.filter(o => o.status === "Cancelled" && o.cancelledBy === "Rider");
+    if (myOrders.length === 0) return { rating: "New", count: 0, score: 0, deliveredCount: 0, totalOrders: 0, completionRate: 0 };
+    const completionRate = delivered.length / myOrders.length;
+    const volumeScore = Math.min(delivered.length / 100, 1);
+    const score = (completionRate * 0.7 + volumeScore * 0.3) * 5;
+    return { rating: score.toFixed(1), count: delivered.length, score: score, deliveredCount: delivered.length, totalOrders: myOrders.length, completionRate: (completionRate * 100).toFixed(0) };
+  }
+
+  function getRatingColor(score) {
+    if (score >= 4.5) return "#22c55e";
+    if (score >= 3.5) return "#84cc16";
+    if (score >= 2.5) return "#f59e0b";
+    if (score >= 1.5) return "#ef4444";
+    return "#64748b";
+  }
+
+  // ============================================
+  // NEW: DARK MODE
+  // ============================================
+  function toggleDarkMode() {
+    state.darkMode = !state.darkMode;
+    localStorage.setItem("syedgo_admin_dark", state.darkMode);
+    applyDarkMode();
+    render();
+  }
+
+  function applyDarkMode() {
+    if (state.darkMode) {
+      document.body.classList.add("dark");
+      document.getElementById("darkToggle").textContent = "☀️";
+    } else {
+      document.body.classList.remove("dark");
+      document.getElementById("darkToggle").textContent = "🌙";
+    }
+  }
+
+  // ============================================
+  // EXISTING: DASHBOARD
+  // ============================================
   function renderDashboard() {
     const today = new Date().toDateString();
     const todayOrders = state.orders.filter(o => new Date(o.createdAt).toDateString() === today);
@@ -170,6 +247,9 @@ p { font-size: 13px; color: var(--text-light); }
       ${state.orders.slice(0, 3).map(o => `<div class="card" style="cursor:pointer;" onclick="openOrderDetail('${o.id}')"><div class="list-header"><b>#${o.id}</b><span class="status-chip ${getStatusClass(o.status)}">${o.status}</span></div><p style="font-size:12px;margin-top:4px;">${o.userName || 'Customer'} • Rs ${o.total}</p><p style="font-size:11px;color:var(--text-light);margin-top:2px;">${new Date(o.createdAt).toLocaleString()}</p></div>`).join("") || '<div class="empty"><span class="big">📭</span>No orders yet</div>'}`;
   }
 
+  // ============================================
+  // EXISTING: ORDERS
+  // ============================================
   function renderOrders() {
     let filtered = state.orders;
     if (state.orderFilter === "pending") filtered = filtered.filter(o => o.status === "Placed");
@@ -199,6 +279,9 @@ p { font-size: 13px; color: var(--text-light); }
       <button class="btn btn-outline btn-block" onclick="closeModal()" style="margin-top:12px;">Close</button></div></div>`;
   }
 
+  // ============================================
+  // EXISTING: MERCHANTS (with NEW rating badge)
+  // ============================================
   function renderMerchants() {
     let list = state.merchants;
     if (state.searchQuery) { const q = state.searchQuery.toLowerCase(); list = list.filter(m => { const mm = m.merchant || m; return (mm.storeName || "").toLowerCase().includes(q) || (mm.phone || "").includes(q); }); }
@@ -206,9 +289,12 @@ p { font-size: 13px; color: var(--text-light); }
       ${list.length === 0 ? '<div class="empty"><span class="big">🏪</span>No merchants yet</div>' : list.map(m => {
         const mm = m.merchant || m;
         const products = m.products || [];
-        const totalOrders = state.orders.filter(o => (o.items || []).some(i => i.shopName === mm.storeName)).length;
+        const rating = calcMerchantRating(m);
         const isFeatured = (state.settings.featuredMerchants || []).includes(mm.phone);
-        return `<div class="card"><div class="list-header"><b>${mm.storeName}</b>${isFeatured ? '<span class="status-chip" style="background:#fef3c7;color:#92400e;">⭐ Featured</span>' : ''}</div><div class="order-row"><span>Category</span><span>${mm.category}</span></div><div class="order-row"><span>Phone</span><span>${mm.phone}</span></div><div class="order-row"><span>Email</span><span style="font-size:11px;">${mm.email || '-'}</span></div><div class="order-row"><span>Address</span><span style="font-size:11px;text-align:right;max-width:60%;">${mm.address || '-'}</span></div><div class="order-row"><span>Products</span><span>${products.length}</span></div><div class="order-row"><span>Total Orders</span><span>${totalOrders}</span></div><div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;"><button class="btn ${isFeatured ? 'btn-warning' : 'btn-outline'} btn-sm" onclick="toggleFeatured('${mm.phone}')">${isFeatured ? '⭐ Remove' : '⭐ Feature'}</button><button class="btn btn-outline btn-sm" onclick="viewMerchantProducts('${mm.phone}')">📦 Products</button><button class="btn btn-danger btn-sm" onclick="deleteMerchant('${mm.phone}')">🗑️ Delete</button></div></div>`;
+        const ratingBg = getRatingColor(rating.score);
+        return `<div class="card"><div class="list-header"><b>${mm.storeName}</b>${isFeatured ? '<span class="status-chip" style="background:#fef3c7;color:#92400e;">⭐ Featured</span>' : ''}</div>
+        <div style="margin:8px 0;"><span class="rating-badge" style="background:${ratingBg};">⭐ ${rating.rating}${rating.count > 0 ? ' (' + rating.count + ')' : ''}</span>${rating.deliveredCount > 0 ? `<span style="font-size:11px;color:var(--text-light);margin-left:8px;">Completion: ${rating.deliveryRate}%</span>` : ''}</div>
+        <div class="order-row"><span>Category</span><span>${mm.category}</span></div><div class="order-row"><span>Phone</span><span>${mm.phone}</span></div><div class="order-row"><span>Email</span><span style="font-size:11px;">${mm.email || '-'}</span></div><div class="order-row"><span>Products</span><span>${products.length}</span></div><div class="order-row"><span>Total Orders</span><span>${rating.totalOrders}</span></div><div class="order-row"><span>Delivered</span><span>${rating.deliveredCount}</span></div><div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;"><button class="btn ${isFeatured ? 'btn-warning' : 'btn-outline'} btn-sm" onclick="toggleFeatured('${mm.phone}')">${isFeatured ? '⭐ Remove' : '⭐ Feature'}</button><button class="btn btn-outline btn-sm" onclick="viewMerchantProducts('${mm.phone}')">📦 Products</button><button class="btn btn-danger btn-sm" onclick="deleteMerchant('${mm.phone}')">🗑️ Delete</button></div></div>`;
       }).join("")}`;
   }
 
@@ -223,25 +309,33 @@ p { font-size: 13px; color: var(--text-light); }
   function viewMerchantProducts(phone) {
     const m = state.merchants.find(x => (x.merchant || x).phone === phone); if (!m) return;
     const products = m.products || []; const mm = m.merchant || m;
-    document.getElementById("modalRoot").innerHTML = `<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="sheet"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><h3 style="margin:0;">📦 ${mm.storeName}</h3><button class="btn btn-outline btn-sm" onclick="closeModal()">✕</button></div>${products.length === 0 ? '<div class="empty"><span class="big">📭</span>No products</div>' : products.map(p => `<div class="card"><div style="display:flex;justify-content:space-between;"><div><b>${p.name}</b><p style="font-size:11px;color:var(--text-light);">${p.desc || '-'}</p><p style="font-size:13px;font-weight:600;color:var(--primary);margin-top:4px;">Rs ${p.price}</p></div><span class="status-chip ${p.stock === false ? 'cancelled' : 'delivered'}">${p.stock === false ? 'Out' : 'In Stock'}</span></div></div>`).join("")}</div></div>`;
+    document.getElementById("modalRoot").innerHTML = `<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="sheet"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><h3 style="margin:0;">📦 ${mm.storeName}</h3><button class="btn btn-outline btn-sm" onclick="closeModal()">✕</button></div>${products.length === 0 ? '<div class="empty"><span class="big">📭</span>No products</div>' : products.map(p => `<div class="card"><div style="display:flex;justify-content:space-between;"><div><b>${p.name}</b><p style="font-size:11px;color:var(--text-light);">${p.desc || '-'}</p><p style="font-size:13px;font-weight:600;color:var(--text);margin-top:4px;">Rs ${p.price}</p></div><span class="status-chip ${p.stock === false ? 'cancelled' : 'delivered'}">${p.stock === false ? 'Out' : 'In Stock'}</span></div></div>`).join("")}</div></div>`;
   }
 
   async function deleteMerchant(phone) { if (!confirm("Delete merchant?")) return; try { await deleteDoc(doc(db, "merchants", phone)); toast("Deleted"); } catch (e) { toast("Failed"); } }
 
+  // ============================================
+  // EXISTING: RIDERS (with NEW rating badge)
+  // ============================================
   function renderRiders() {
     let list = state.riders;
     if (state.searchQuery) { const q = state.searchQuery.toLowerCase(); list = list.filter(r => (r.name || "").toLowerCase().includes(q) || (r.phone || "").includes(q)); }
+    // Sort by rating score desc
+    list = [...list].sort((a, b) => calcRiderRating(b).score - calcRiderRating(a).score);
     return `<h2>🛵 Riders (${list.length})</h2><input class="search-input" placeholder="Search rider..." value="${state.searchQuery}" oninput="state.searchQuery=this.value; render();" />
       ${list.length === 0 ? '<div class="empty"><span class="big">🛵</span>No riders yet</div>' : list.map(r => {
-        const riderOrders = state.orders.filter(o => o.rider && o.rider.phone === r.phone);
-        const completed = riderOrders.filter(o => o.status === "Delivered");
-        const totalEarned = completed.reduce((s, o) => s + (o.riderEarning || 120), 0);
-        return `<div class="card"><div class="list-header"><b>${r.name || 'Unknown'}</b><span class="status-chip delivered">⭐ ${r.rating || '5.0'}</span></div><div class="order-row"><span>Phone</span><span>${r.phone}</span></div><div class="order-row"><span>Bike</span><span>${r.bike || '-'}</span></div><div class="order-row"><span>Completed</span><span>${completed.length}</span></div><div class="order-row"><span>Earned</span><span>Rs ${totalEarned}</span></div><button class="btn btn-danger btn-sm" onclick="deleteRider('${r.phone}')" style="margin-top:10px;">🗑️ Remove</button></div>`;
+        const rating = calcRiderRating(r);
+        const totalEarned = state.orders.filter(o => o.rider && o.rider.phone === r.phone && o.status === "Delivered").reduce((s, o) => s + (o.riderEarning || 120), 0);
+        const ratingBg = getRatingColor(rating.score);
+        return `<div class="card"><div class="list-header"><b>${r.name || 'Unknown'}</b><span class="rating-badge" style="background:${ratingBg};">⭐ ${rating.rating}${rating.count > 0 ? ' (' + rating.count + ')' : ''}</span></div><div class="order-row"><span>Phone</span><span>${r.phone}</span></div><div class="order-row"><span>Bike</span><span>${r.bike || '-'}</span></div><div class="order-row"><span>Delivered</span><span>${rating.deliveredCount}</span></div><div class="order-row"><span>Total Assigned</span><span>${rating.totalOrders}</span></div>${rating.totalOrders > 0 ? `<div class="order-row"><span>Completion Rate</span><span>${rating.completionRate}%</span></div>` : ''}<div class="order-row"><span>Earned</span><span>Rs ${totalEarned}</span></div><button class="btn btn-danger btn-sm" onclick="deleteRider('${r.phone}')" style="margin-top:10px;">🗑️ Remove</button></div>`;
       }).join("")}`;
   }
 
   async function deleteRider(phone) { if (!confirm("Remove rider?")) return; try { await deleteDoc(doc(db, "riders", phone)); toast("Removed"); } catch (e) { toast("Failed"); } }
 
+  // ============================================
+  // EXISTING: CUSTOMERS
+  // ============================================
   function renderCustomers() {
     let list = state.customers;
     if (state.searchQuery) { const q = state.searchQuery.toLowerCase(); list = list.filter(u => { const user = u.user || u; return (user.name || "").toLowerCase().includes(q) || (user.phone || "").includes(q); }); }
@@ -254,6 +348,9 @@ p { font-size: 13px; color: var(--text-light); }
       }).join("")}`;
   }
 
+  // ============================================
+  // EXISTING: PAYOUTS
+  // ============================================
   function renderPayouts() {
     const payouts = state.payouts;
     const pending = payouts.filter(p => p.status === "pending");
@@ -270,21 +367,310 @@ p { font-size: 13px; color: var(--text-light); }
   async function approvePayout(payoutId) { if (!confirm("Mark as PAID?")) return; try { await updateDoc(doc(db, "payouts", payoutId), { status: "paid", paidAt: new Date().toISOString() }); toast("✅ Approved"); } catch (e) { toast("Failed"); } }
   async function rejectPayout(payoutId) { if (!confirm("Reject?")) return; try { await updateDoc(doc(db, "payouts", payoutId), { status: "rejected", rejectedAt: new Date().toISOString() }); toast("Rejected"); } catch (e) { toast("Failed"); } }
 
+  // ============================================
+  // NEW: REPORTS & ANALYTICS
+  // ============================================
+  function getDateRange(range) {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    if (range === "today") return { from: today, to: now };
+    if (range === "7days") return { from: new Date(today.getTime() - 6 * 24 * 60 * 60 * 1000), to: now };
+    if (range === "30days") return { from: new Date(today.getTime() - 29 * 24 * 60 * 60 * 1000), to: now };
+    if (range === "thisMonth") return { from: new Date(now.getFullYear(), now.getMonth(), 1), to: now };
+    return { from: new Date(today.getTime() - 6 * 24 * 60 * 60 * 1000), to: now };
+  }
+
+  function filterOrdersByRange(orders, range) {
+    const { from, to } = getDateRange(range);
+    return orders.filter(o => { const d = new Date(o.createdAt); return d >= from && d <= to; });
+  }
+
+  function buildSalesTrendData(orders, range) {
+    const { from } = getDateRange(range);
+    const days = range === "today" ? 1 : range === "30days" || range === "thisMonth" ? 30 : 7;
+    const labels = [];
+    const salesData = [];
+    const ordersData = [];
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date(from.getTime() + i * 24 * 60 * 60 * 1000);
+      const dayStr = d.toLocaleDateString('en', { day: 'numeric', month: 'short' });
+      labels.push(dayStr);
+      const dayOrders = orders.filter(o => new Date(o.createdAt).toDateString() === d.toDateString());
+      const dayDelivered = dayOrders.filter(o => o.status === "Delivered");
+      const revenue = dayDelivered.reduce((s, o) => s + (o.total || 0), 0);
+      salesData.push(revenue);
+      ordersData.push(dayOrders.length);
+    }
+    return { labels, salesData, ordersData };
+  }
+
+  function renderReports() {
+    const filteredOrders = filterOrdersByRange(state.orders, state.reportRange);
+    const delivered = filteredOrders.filter(o => o.status === "Delivered");
+    const cancelled = filteredOrders.filter(o => ["Cancelled", "Rejected"].includes(o.status));
+    const totalSales = delivered.reduce((s, o) => s + (o.total || 0), 0);
+    const totalOrders = filteredOrders.length;
+    const avgOrderValue = delivered.length > 0 ? Math.round(totalSales / delivered.length) : 0;
+    const cancelRate = totalOrders > 0 ? ((cancelled.length / totalOrders) * 100).toFixed(1) : 0;
+
+    // Top merchants by delivered orders
+    const merchantStats = {};
+    delivered.forEach(o => {
+      (o.items || []).forEach(i => {
+        if (!i.shopName) return;
+        if (!merchantStats[i.shopName]) merchantStats[i.shopName] = { name: i.shopName, orders: 0, revenue: 0 };
+        merchantStats[i.shopName].orders++;
+        merchantStats[i.shopName].revenue += i.price * i.qty;
+      });
+    });
+    const topMerchants = Object.values(merchantStats).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
+
+    // Top riders
+    const riderStats = {};
+    delivered.forEach(o => {
+      if (!o.rider) return;
+      const phone = o.rider.phone;
+      if (!riderStats[phone]) riderStats[phone] = { name: o.rider.name, phone, deliveries: 0, earned: 0 };
+      riderStats[phone].deliveries++;
+      riderStats[phone].earned += (o.riderEarning || 120);
+    });
+    const topRiders = Object.values(riderStats).sort((a, b) => b.deliveries - a.deliveries).slice(0, 5);
+
+    const rangeLabel = { today: "Today", "7days": "Last 7 Days", "30days": "Last 30 Days", thisMonth: "This Month" }[state.reportRange] || "Last 7 Days";
+
+    return `<h2>📈 Reports & Analytics</h2>
+      <div class="filter-chips">
+        <div class="filter-chip ${state.reportRange==='today'?'active':''}" onclick="state.reportRange='today';render();">Today</div>
+        <div class="filter-chip ${state.reportRange==='7days'?'active':''}" onclick="state.reportRange='7days';render();">7 Days</div>
+        <div class="filter-chip ${state.reportRange==='30days'?'active':''}" onclick="state.reportRange='30days';render();">30 Days</div>
+        <div class="filter-chip ${state.reportRange==='thisMonth'?'active':''}" onclick="state.reportRange='thisMonth';render();">This Month</div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-box accent"><div class="num">Rs ${totalSales}</div><div class="lbl">Total Sales (${rangeLabel})</div></div>
+        <div class="stat-box blue"><div class="num">${totalOrders}</div><div class="lbl">Total Orders</div></div>
+        <div class="stat-box green"><div class="num">Rs ${avgOrderValue}</div><div class="lbl">Avg Order Value</div></div>
+        <div class="stat-box red"><div class="num">${cancelRate}%</div><div class="lbl">Cancel Rate</div></div>
+      </div>
+
+      <div class="chart-container">
+        <h3 style="margin-bottom:12px;font-size:14px;">💰 Sales Trend</h3>
+        <canvas id="salesChart"></canvas>
+      </div>
+
+      <div class="chart-container">
+        <h3 style="margin-bottom:12px;font-size:14px;">📦 Orders Trend</h3>
+        <canvas id="ordersChart"></canvas>
+      </div>
+
+      <h3 style="margin-top:16px;margin-bottom:8px;">🏆 Top 5 Merchants by Revenue</h3>
+      ${topMerchants.length === 0 ? '<div class="card"><p style="font-size:12px;color:var(--text-light);">No data</p></div>' : `<div class="card">${topMerchants.map((m, i) => `<div class="report-row"><span><b>#${i + 1}</b> ${m.name}</span><span>Rs ${m.revenue} (${m.orders})</span></div>`).join("")}</div>`}
+
+      <h3 style="margin-top:16px;margin-bottom:8px;">🥇 Top 5 Riders by Deliveries</h3>
+      ${topRiders.length === 0 ? '<div class="card"><p style="font-size:12px;color:var(--text-light);">No data</p></div>' : `<div class="card">${topRiders.map((r, i) => `<div class="report-row"><span><b>#${i + 1}</b> ${r.name}</span><span>${r.deliveries} • Rs ${r.earned}</span></div>`).join("")}</div>`}
+
+      <h3 style="margin-top:16px;margin-bottom:8px;">📥 Export Data</h3>
+      <div class="export-btn-group">
+        <button class="btn btn-outline" onclick="exportCSV('orders')">📄 Orders CSV</button>
+        <button class="btn btn-outline" onclick="exportCSV('merchants')">🏪 Merchants CSV</button>
+        <button class="btn btn-outline" onclick="exportCSV('riders')">🛵 Riders CSV</button>
+        <button class="btn btn-outline" onclick="exportCSV('customers')">👥 Customers CSV</button>
+      </div>
+    `;
+  }
+
+  function renderCharts() {
+    if (state.tab !== "reports") return;
+    if (salesChartInstance) { salesChartInstance.destroy(); salesChartInstance = null; }
+    if (ordersChartInstance) { ordersChartInstance.destroy(); ordersChartInstance = null; }
+
+    const filteredOrders = filterOrdersByRange(state.orders, state.reportRange);
+    const trend = buildSalesTrendData(filteredOrders, state.reportRange);
+    const textColor = state.darkMode ? "#f1f5f9" : "#0f172a";
+    const gridColor = state.darkMode ? "rgba(148,163,184,0.2)" : "rgba(100,116,139,0.1)";
+
+    const salesCtx = document.getElementById("salesChart");
+    if (salesCtx) {
+      salesChartInstance = new Chart(salesCtx, {
+        type: "line",
+        data: {
+          labels: trend.labels,
+          datasets: [{
+            label: "Sales (Rs)",
+            data: trend.salesData,
+            borderColor: "#7c3aed",
+            backgroundColor: "rgba(124,58,237,0.1)",
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: "#7c3aed",
+            pointRadius: 4,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor } },
+            y: { ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor }, beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    const ordersCtx = document.getElementById("ordersChart");
+    if (ordersCtx) {
+      ordersChartInstance = new Chart(ordersCtx, {
+        type: "bar",
+        data: {
+          labels: trend.labels,
+          datasets: [{
+            label: "Orders",
+            data: trend.ordersData,
+            backgroundColor: "#3b82f6",
+            borderRadius: 6,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor } },
+            y: { ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor }, beginAtZero: true }
+          }
+        }
+      });
+    }
+  }
+
+  // ============================================
+  // NEW: EXPORT CSV
+  // ============================================
+  function exportCSV(type) {
+    let data = [];
+    let filename = "";
+
+    if (type === "orders") {
+      data = state.orders.map(o => ({
+        id: o.id,
+        date: o.createdAt,
+        customer: o.userName || "",
+        phone: o.userPhone || "",
+        items: (o.items || []).map(i => `${i.name} x${i.qty}`).join("; "),
+        subtotal: o.subtotal || 0,
+        delivery: o.delivery || 0,
+        total: o.total || 0,
+        status: o.status,
+        rider: o.rider ? o.rider.name : "",
+        pay: o.pay || "cod",
+        mode: o.mode || "delivery"
+      }));
+      filename = `swatgo-orders-${Date.now()}.csv`;
+    } else if (type === "merchants") {
+      data = state.merchants.map(m => {
+        const mm = m.merchant || m;
+        const rating = calcMerchantRating(m);
+        return {
+          storeName: mm.storeName || "",
+          phone: mm.phone || "",
+          email: mm.email || "",
+          category: mm.category || "",
+          address: mm.address || "",
+          productsCount: (m.products || []).length,
+          orders: rating.totalOrders,
+          delivered: rating.deliveredCount,
+          rating: rating.rating,
+          featured: (state.settings.featuredMerchants || []).includes(mm.phone) ? "Yes" : "No"
+        };
+      });
+      filename = `swatgo-merchants-${Date.now()}.csv`;
+    } else if (type === "riders") {
+      data = state.riders.map(r => {
+        const rating = calcRiderRating(r);
+        const earned = state.orders.filter(o => o.rider && o.rider.phone === r.phone && o.status === "Delivered").reduce((s, o) => s + (o.riderEarning || 120), 0);
+        return {
+          name: r.name || "",
+          phone: r.phone || "",
+          bike: r.bike || "",
+          totalAssigned: rating.totalOrders,
+          delivered: rating.deliveredCount,
+          completionRate: rating.completionRate + "%",
+          rating: rating.rating,
+          totalEarned: earned
+        };
+      });
+      filename = `swatgo-riders-${Date.now()}.csv`;
+    } else if (type === "customers") {
+      data = state.customers.map(u => {
+        const user = u.user || u;
+        const userOrders = state.orders.filter(o => o.userPhone === user.phone);
+        const spent = userOrders.filter(o => o.status === "Delivered").reduce((s, o) => s + (o.total || 0), 0);
+        return {
+          name: user.name || "",
+          phone: user.phone || "",
+          email: user.email || "",
+          orders: userOrders.length,
+          totalSpent: spent
+        };
+      });
+      filename = `swatgo-customers-${Date.now()}.csv`;
+    }
+
+    if (data.length === 0) return toast("No data to export");
+
+    // Build CSV
+    const headers = Object.keys(data[0]);
+    const csvRows = [headers.join(",")];
+    data.forEach(row => {
+      const values = headers.map(h => {
+        const val = row[h];
+        const str = String(val === undefined || val === null ? "" : val);
+        return `"${str.replace(/"/g, '""')}"`;
+      });
+      csvRows.push(values.join(","));
+    });
+    const csv = csvRows.join("\n");
+
+    // Download
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast("📥 Exported!");
+  }
+
+  // ============================================
+  // EXISTING: SETTINGS (with NEW export button)
+  // ============================================
   function renderSettings() {
     return `<h2>⚙️ Settings</h2>
       <div class="card"><h3 style="margin-bottom:12px;">💰 Commission & Fees</h3><label class="form-label">Store Commission Rate (%)</label><input class="form-input" type="number" value="${state.settings.commissionRate}" onchange="updateSetting('commissionRate', parseInt(this.value))" /><label class="form-label">Delivery Fee (Rs)</label><input class="form-input" type="number" value="${state.settings.deliveryFee}" onchange="updateSetting('deliveryFee', parseInt(this.value))" /><label class="form-label">Platform Fee (Rs)</label><input class="form-input" type="number" value="${state.settings.platformFee}" onchange="updateSetting('platformFee', parseInt(this.value))" /><label class="form-label">Rider Cut per Delivery (Rs)</label><input class="form-input" type="number" value="${state.settings.riderCut}" onchange="updateSetting('riderCut', parseInt(this.value))" /></div>
       <div class="card"><h3 style="margin-bottom:12px;">⭐ Featured Merchants</h3><p style="font-size:12px;color:var(--text-light);margin-bottom:8px;">Total: ${(state.settings.featuredMerchants || []).length}</p>${(state.settings.featuredMerchants || []).length === 0 ? '<p style="font-size:12px;color:var(--text-light);">No featured merchants.</p>' : state.settings.featuredMerchants.map(phone => { const m = state.merchants.find(x => (x.merchant || x).phone === phone); const name = m ? (m.merchant || m).storeName : phone; return `<div class="order-row" style="padding:8px 0;"><span>${name}</span><button class="btn btn-outline btn-sm" onclick="toggleFeatured('${phone}')">Remove</button></div>`; }).join("")}</div>
-      <div class="card"><h3 style="margin-bottom:12px;">📊 Data</h3><button class="btn btn-outline btn-block" onclick="exportData()" style="margin-bottom:8px;">📥 Export Orders (JSON)</button></div>`;
+      <div class="card"><h3 style="margin-bottom:12px;">📊 Data Export</h3>
+        <button class="btn btn-outline btn-block" onclick="exportData()" style="margin-bottom:8px;">📥 Export All Data (JSON)</button>
+        <button class="btn btn-outline btn-block" onclick="exportCSV('orders')" style="margin-bottom:8px;">📄 Export Orders (CSV)</button>
+        <button class="btn btn-outline btn-block" onclick="exportCSV('merchants')" style="margin-bottom:8px;">🏪 Export Merchants (CSV)</button>
+        <button class="btn btn-outline btn-block" onclick="exportCSV('riders')" style="margin-bottom:8px;">🛵 Export Riders (CSV)</button>
+        <button class="btn btn-outline btn-block" onclick="exportCSV('customers')">👥 Export Customers (CSV)</button>
+      </div>`;
   }
 
   async function updateSetting(key, value) { if (isNaN(value)) return toast("Invalid"); state.settings[key] = value; try { await setDoc(doc(db, "settings", "global"), state.settings, { merge: true }); toast("Saved ✅"); } catch (e) { toast("Failed"); } }
 
   function exportData() { const data = JSON.stringify({ orders: state.orders, merchants: state.merchants, riders: state.riders, customers: state.customers, payouts: state.payouts, exportedAt: new Date().toISOString() }, null, 2); const blob = new Blob([data], { type: "application/json" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "swatgo-export-" + Date.now() + ".json"; a.click(); toast("Exported"); }
 
+  // ============================================
+  // MAIN RENDER
+  // ============================================
   function render() {
     const app = document.getElementById("app");
-    if (!state.isLoggedIn) { app.innerHTML = `<div class="card" style="text-align:center;padding:40px 20px;"><div style="font-size:64px;margin-bottom:16px;">⚙️</div><h3 style="margin-bottom:8px;">SwatGo Admin Panel</h3><p style="color:var(--text-light);font-size:13px;margin-bottom:20px;">Secure access only</p><button class="btn btn-primary btn-block" onclick="adminLogin()">🔐 Login</button></div>`; document.getElementById("bottomNav").style.display = "none"; return; }
+    if (!state.isLoggedIn) { app.innerHTML = `<div class="card" style="text-align:center;padding:40px 20px;"><div style="font-size:64px;margin-bottom:16px;">⚙️</div><h3 style="margin-bottom:8px;">SwatGo Admin Panel</h3><p style="color:var(--text-light);font-size:13px;margin-bottom:20px;">Secure access only</p><button class="btn btn-primary btn-block" onclick="adminLogin()">🔐 Login</button></div>`; document.getElementById("bottomNav").style.display = "none"; document.getElementById("darkToggle").style.display = "none"; return; }
     document.getElementById("bottomNav").style.display = "flex";
+    document.getElementById("darkToggle").style.display = "flex";
     let html = "";
     if (state.tab === "dashboard") html = renderDashboard();
     else if (state.tab === "orders") html = renderOrders();
@@ -292,19 +678,23 @@ p { font-size: 13px; color: var(--text-light); }
     else if (state.tab === "riders") html = renderRiders();
     else if (state.tab === "customers") html = renderCustomers();
     else if (state.tab === "payouts") html = renderPayouts();
+    else if (state.tab === "reports") html = renderReports();
     else if (state.tab === "settings") html = renderSettings();
     app.innerHTML = html;
     document.querySelectorAll(".bottom-nav button").forEach(b => b.classList.toggle("active", b.dataset.tab === state.tab));
     updateOrderBadge();
+    if (state.tab === "reports") setTimeout(renderCharts, 100);
   }
 
   document.querySelectorAll(".bottom-nav button").forEach(btn => { btn.addEventListener("click", () => { state.tab = btn.dataset.tab; state.searchQuery = ""; render(); window.scrollTo(0, 0); }); });
 
   setTimeout(() => { document.getElementById('splash').style.opacity = '0'; setTimeout(() => document.getElementById('splash')?.remove(), 500); }, 1500);
+  applyDarkMode();
   if (state.isLoggedIn) startListeners();
   render();
 
   window.adminLogin = adminLogin; window.verifyAdmin = verifyAdmin; window.adminLogout = adminLogout; window.openOrderDetail = openOrderDetail; window.toggleFeatured = toggleFeatured; window.viewMerchantProducts = viewMerchantProducts; window.deleteMerchant = deleteMerchant; window.deleteRider = deleteRider; window.approvePayout = approvePayout; window.rejectPayout = rejectPayout; window.updateSetting = updateSetting; window.exportData = exportData; window.closeModal = closeModal; window.toast = toast;
+  window.toggleDarkMode = toggleDarkMode; window.exportCSV = exportCSV;
 </script>
 </body>
 </html>
